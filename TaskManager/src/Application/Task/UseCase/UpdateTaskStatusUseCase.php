@@ -37,10 +37,20 @@ final class UpdateTaskStatusUseCase
 
         $this->taskStatusContext->transition($task, TaskStatus::fromString($targetStatus));
 
+        $this->taskRepository->save($task);
+
         $events = $task->pullDomainEvents();
 
-        $this->taskRepository->save($task);
-        $this->domainEventDispatcher->dispatchAll($events);
+        try {
+            $this->domainEventDispatcher->dispatchAll($events);
+        } catch (\Throwable $exception) {
+            // Events dispatch failure should not invalidate the already-persisted task update.
+            error_log(sprintf(
+                'Failed to dispatch domain events for task "%s": %s',
+                $taskId,
+                $exception->getMessage()
+            ));
+        }
 
         return $task;
     }
