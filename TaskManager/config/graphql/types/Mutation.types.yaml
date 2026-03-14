@@ -21,7 +21,7 @@ MutationType:
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\User\\\\PromoteUserToAdminMutation').__invoke(args)"
 
             createTask:
-                type: "TaskType"
+                type: "TaskType!"
                 args:
                     title:
                         type: "String!"
@@ -29,13 +29,13 @@ MutationType:
                         type: "String!"
                     assignedUserId:
                         type: "String!"
-                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveCreate(args)"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\Task\\\\CreateTaskMutation').__invoke(args)"
 
             updateTaskStatus:
-                type: "TaskType"
+                type: "TaskType!"
                 args:
                     taskId:
                         type: "String!"
                     status:
                         type: "String!"
-                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveUpdateStatus(args)"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\Task\\\\UpdateTaskStatusMutation').__invoke(args)"

@@ -58,3 +58,47 @@ services:
     App\Infrastructure\Security\TokenService:
         arguments:
             $appSecret: '%kernel.secret%'
+
+    App\Infrastructure\Security\AuthorizationService:
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\CreateTaskUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\UpdateTaskStatusUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\GetTaskHistoryUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\Task\CreateTaskMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\Task\UpdateTaskStatusMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\Task\AllTasksQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\Task\MyTasksQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\Task\TaskHistoryQuery:
+        public: true
+        autowire: true
+        autoconfigure: true

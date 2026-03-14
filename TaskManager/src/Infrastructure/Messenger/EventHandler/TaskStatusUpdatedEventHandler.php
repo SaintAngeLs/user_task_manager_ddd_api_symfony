@@ -11,17 +11,20 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class TaskStatusUpdatedEventHandler
 {
-    public function __construct(private readonly EventStoreRepository $eventStore) {}
+    public function __construct(
+        private readonly EventStoreRepository $eventStoreRepository,
+    ) {
+    }
 
     public function __invoke(TaskStatusUpdatedEvent $event): void
     {
-        $this->eventStore->append(
+        $this->eventStoreRepository->append(
             aggregateId: $event->taskId,
-            eventType:   TaskStatusUpdatedEvent::class,
-            payload:     [
-                'taskId'         => $event->taskId,
+            eventType: TaskStatusUpdatedEvent::class,
+            payload: [
+                'taskId' => $event->taskId,
                 'previousStatus' => $event->previousStatus,
-                'newStatus'      => $event->newStatus,
+                'newStatus' => $event->newStatus,
             ],
             occurredAt: $event->occurredAt,
         );
