@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Application\User\UseCase;
 
 use App\Domain\User\Entity\User;
@@ -14,9 +16,10 @@ final class ImportUsersFromJSONPlaceholderUseCase
         private readonly UserRepositoryInterface $repository,
     ) {}
 
-    public function execute(): void
+    public function execute(): array
     {
         $rawUsers = $this->client->fetchUsers();
+        $importedUsers = [];
 
         foreach ($rawUsers as $data) {
             $existing = $this->repository->findById(UserId::fromInt($data['id']));
@@ -32,6 +35,13 @@ final class ImportUsersFromJSONPlaceholderUseCase
             );
 
             $this->repository->save($user);
+            $importedUsers[] = $user;
         }
+
+        return [
+            'success' => true,
+            'importedCount' => count($importedUsers),
+            'users' => $importedUsers,
+        ];
     }
 }

@@ -29,3 +29,18 @@ services:
     App\Application\Task\Strategy\TaskStatusContext:
         arguments:
             $strategies: !tagged_iterator app.task_status_strategy
+
+    App\Infrastructure\GraphQL\Query\User\ImportedUsersQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\User\ImportUsersMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\User\PromoteUserToAdminMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
