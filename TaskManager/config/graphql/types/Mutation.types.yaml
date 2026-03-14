@@ -1,0 +1,25 @@
+Mutation:
+    type: object
+    config:
+        fields:
+            importUsers:
+                type: "Boolean!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\UserResolver').resolveImport()"
+            createTask:
+                type: "TaskType"
+                args:
+                    title:
+                        type: "String!"
+                    description:
+                        type: "String!"
+                    assignedUserId:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveCreate(args)"
+            updateTaskStatus:
+                type: "TaskType"
+                args:
+                    taskId:
+                        type: "String!"
+                    status:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveUpdateStatus(args)"

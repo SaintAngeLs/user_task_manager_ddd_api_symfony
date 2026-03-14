@@ -1,0 +1,22 @@
+Query:
+    type: object
+    config:
+        fields:
+            users:
+                type: "[UserType]"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\UserResolver').resolveAll()"
+            me:
+                type: "UserType"
+                args:
+                    username:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\UserResolver').resolveMe(args)"
+            tasks:
+                type: "[TaskType]"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveAll()"
+            myTasks:
+                type: "[TaskType]"
+                args:
+                    userId:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveByUser(args)"
