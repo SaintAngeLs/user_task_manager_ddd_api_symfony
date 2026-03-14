@@ -14,3 +14,18 @@ TaskType:
                 type: "String!"
             createdAt:
                 type: "String!"
+                resolve: "@=value.getCreatedAt().format('c')"
+            updatedAt:
+                type: "String!"
+                resolve: "@=value.getUpdatedAt().format('c')"
+
+TaskHistoryItemType:
+    type: object
+    config:
+        fields:
+            eventType:
+                type: "String!"
+            payload:
+                type: "String!"
+            occurredAt:
+                type: "String!"

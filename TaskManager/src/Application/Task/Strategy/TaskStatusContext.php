@@ -11,16 +11,16 @@ use DomainException;
 
 final class TaskStatusContext
 {
-    /** @param TaskStatusStrategyInterface[] $strategies */
-    public function __construct(private readonly array $strategies) {}
+    /** @param iterable<TaskStatusStrategyInterface> $strategies */
+    public function __construct(private readonly iterable $strategies) {}
 
     public function transition(Task $task, TaskStatus $targetStatus): void
     {
         foreach ($this->strategies as $strategy) {
             if ($strategy->supports($task->getStatus())) {
-                // Only apply if the strategy leads to the desired target
                 $clone = clone $task;
                 $strategy->apply($clone);
+
                 if ($clone->getStatus()->equals($targetStatus)) {
                     $strategy->apply($task);
                     return;
