@@ -3,6 +3,10 @@ set -e
 
 cd /var/www/app
 
+if [ ! -f .env ] && [ -f .env.docker ]; then
+  cp .env.docker .env
+fi
+
 if [ -f composer.json ] && [ ! -d vendor ]; then
   composer install --no-interaction --prefer-dist
 fi
