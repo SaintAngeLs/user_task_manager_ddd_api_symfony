@@ -102,3 +102,10 @@ services:
         public: true
         autowire: true
         autoconfigure: true
+
+    App\Domain\Shared\Event\DomainEventDispatcherInterface:
+        class: App\Infrastructure\Messenger\SymfonyMessengerDomainEventDispatcher
+
+    App\Infrastructure\Messenger\SymfonyMessengerDomainEventDispatcher:
+        autowire: true
+        autoconfigure: true

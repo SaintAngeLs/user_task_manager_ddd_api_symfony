@@ -3,14 +3,15 @@ framework:
         failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            # Use the DSN from .env / .env.local, for example:
+            # MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
+
             failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
 
         default_bus: messenger.bus.default
 
@@ -22,5 +23,5 @@ framework:
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
 
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            App\Domain\Task\Event\TaskCreatedEvent: async
+            App\Domain\Task\Event\TaskStatusUpdatedEvent: async
