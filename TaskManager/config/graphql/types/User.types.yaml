@@ -23,3 +23,12 @@ ImportUsersPayload:
                 type: "Int!"
             users:
                 type: "[UserType!]!"
+
+LoginPayload:
+    type: object
+    config:
+        fields:
+            token:
+                type: "String!"
+            user:
+                type: "UserType!"

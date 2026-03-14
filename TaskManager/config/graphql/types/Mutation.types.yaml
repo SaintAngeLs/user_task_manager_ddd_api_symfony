@@ -6,6 +6,13 @@ MutationType:
                 type: "ImportUsersPayload!"
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\User\\\\ImportUsersMutation').__invoke()"
 
+            loginUser:
+                type: "LoginPayload!"
+                args:
+                    username:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\User\\\\LoginUserMutation').__invoke(args)"
+
             promoteUserToAdmin:
                 type: "UserType!"
                 args:

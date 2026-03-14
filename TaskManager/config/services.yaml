@@ -44,3 +44,17 @@ services:
         public: true
         autowire: true
         autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\User\LoginUserMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\User\MeQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\Security\TokenService:
+        arguments:
+            $appSecret: '%kernel.secret%'

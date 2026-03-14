@@ -5,21 +5,22 @@ QueryType:
             users:
                 type: "[UserType]"
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\UserResolver').resolveAll()"
+
             me:
                 type: "UserType"
-                args:
-                    username:
-                        type: "String!"
-                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\UserResolver').resolveMe(args)"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\User\\\\MeQuery').__invoke()"
+
             tasks:
                 type: "[TaskType]"
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveAll()"
+
             myTasks:
                 type: "[TaskType]"
                 args:
                     userId:
                         type: "String!"
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveByUser(args)"
+
             importedUsers:
                 type: "[UserType!]!"
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\User\\\\ImportedUsersQuery').__invoke()"
