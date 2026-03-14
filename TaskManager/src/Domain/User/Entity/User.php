@@ -12,20 +12,20 @@ class User
     private string $name;
     private string $username;
     private string $email;
-    private bool   $isAdmin;
+    private bool $isAdmin;
 
     public function __construct(
         UserId $id,
         string $name,
         string $username,
         string $email,
-        bool   $isAdmin = false,
+        bool $isAdmin = false,
     ) {
-        $this->id       = $id;
-        $this->name     = $name;
+        $this->id = $id;
+        $this->name = $name;
         $this->username = $username;
-        $this->email    = $email;
-        $this->isAdmin  = $isAdmin;
+        $this->email = $email;
+        $this->isAdmin = $isAdmin;
     }
 
     public function getId(): UserId

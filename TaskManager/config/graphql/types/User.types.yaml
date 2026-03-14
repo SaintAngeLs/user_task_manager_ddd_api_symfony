@@ -12,3 +12,14 @@ UserType:
                 type: "String!"
             isAdmin:
                 type: "Boolean!"
+
+ImportUsersPayload:
+    type: object
+    config:
+        fields:
+            success:
+                type: "Boolean!"
+            importedCount:
+                type: "Int!"
+            users:
+                type: "[UserType!]!"

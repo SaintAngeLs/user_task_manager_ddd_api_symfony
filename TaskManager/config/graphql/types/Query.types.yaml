@@ -1,4 +1,4 @@
-Query:
+QueryType:
     type: object
     config:
         fields:
@@ -20,3 +20,6 @@ Query:
                     userId:
                         type: "String!"
                 resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\TaskResolver').resolveByUser(args)"
+            importedUsers:
+                type: "[UserType!]!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\User\\\\ImportedUsersQuery').__invoke()"

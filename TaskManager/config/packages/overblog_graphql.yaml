@@ -1,8 +1,8 @@
 overblog_graphql:
     definitions:
         schema:
-            query: Query
-            mutation: Mutation
+            query: QueryType
+            mutation: MutationType
         mappings:
             types:
                 - types: [yaml]
