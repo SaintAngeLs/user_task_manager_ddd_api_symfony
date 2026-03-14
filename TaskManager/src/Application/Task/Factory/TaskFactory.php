@@ -28,12 +28,12 @@ final class TaskFactory
         }
 
         return new Task(
-            id:             TaskId::generate(),
-            title:          trim($title),
-            description:    trim($description),
-            status:         TaskStatus::fromString($status),
+            id: TaskId::generate(),
+            title: trim($title),
+            description: trim($description),
+            status: TaskStatus::fromString($status),
             assignedUserId: UserId::fromString($assignedUserId),
-            createdAt:      new DateTimeImmutable(),
+            createdAt: new DateTimeImmutable(),
         );
     }
 
@@ -46,12 +46,12 @@ final class TaskFactory
         DateTimeImmutable $createdAt,
     ): Task {
         return new Task(
-            id:             TaskId::fromString($id),
-            title:          $title,
-            description:    $description,
-            status:         TaskStatus::fromString($status),
+            id: TaskId::fromString($id),
+            title: $title,
+            description: $description,
+            status: TaskStatus::fromString($status),
             assignedUserId: UserId::fromString($assignedUserId),
-            createdAt:      $createdAt,
+            createdAt: $createdAt,
         );
     }
 }

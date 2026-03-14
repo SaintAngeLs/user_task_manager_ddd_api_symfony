@@ -11,7 +11,9 @@ final class JSONPlaceholderClient
 {
     private const BASE_URL = 'https://jsonplaceholder.typicode.com';
 
-    public function __construct(private readonly HttpClientInterface $httpClient) {}
+    public function __construct(private readonly HttpClientInterface $httpClient)
+    {
+    }
 
     /**
      * Fetches all users from JSONPlaceholder.

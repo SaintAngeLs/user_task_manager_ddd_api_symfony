@@ -9,9 +9,6 @@ use App\Domain\Task\Strategy\TaskStatusStrategyInterface;
 use App\Domain\Task\ValueObject\TaskStatus;
 use DomainException;
 
-/**
- * Strategy Pattern — transitions a task from "in_progress" to "done".
- */
 final class MoveToDoneStrategy implements TaskStatusStrategyInterface
 {
     public function supports(TaskStatus $currentStatus): bool

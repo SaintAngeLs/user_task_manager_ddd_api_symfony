@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Task\UseCase;
 
 use App\Application\Task\Strategy\TaskStatusContext;
+use App\Domain\Shared\Event\DomainEventDispatcherInterface;
 use App\Domain\Task\Entity\Task;
 use App\Domain\Task\Repository\TaskRepositoryInterface;
 use App\Domain\Task\ValueObject\TaskId;
@@ -18,6 +19,7 @@ final class UpdateTaskStatusUseCase
         private readonly TaskRepositoryInterface $taskRepository,
         private readonly TaskStatusContext $taskStatusContext,
         private readonly AuthorizationService $authorizationService,
+        private readonly DomainEventDispatcherInterface $domainEventDispatcher,
     ) {
     }
 
@@ -34,7 +36,21 @@ final class UpdateTaskStatusUseCase
         }
 
         $this->taskStatusContext->transition($task, TaskStatus::fromString($targetStatus));
+
         $this->taskRepository->save($task);
+
+        $events = $task->pullDomainEvents();
+
+        try {
+            $this->domainEventDispatcher->dispatchAll($events);
+        } catch (\Throwable $exception) {
+            // Events dispatch failure should not invalidate the already-persisted task update.
+            error_log(sprintf(
+                'Failed to dispatch domain events for task "%s": %s',
+                $taskId,
+                $exception->getMessage()
+            ));
+        }
 
         return $task;
     }

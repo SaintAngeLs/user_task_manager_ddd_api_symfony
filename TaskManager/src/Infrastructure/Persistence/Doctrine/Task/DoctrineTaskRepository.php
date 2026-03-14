@@ -15,8 +15,9 @@ final class DoctrineTaskRepository implements TaskRepositoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly TaskFactory            $factory,
-    ) {}
+        private readonly TaskFactory $factory,
+    ) {
+    }
 
     public function save(Task $task): void
     {

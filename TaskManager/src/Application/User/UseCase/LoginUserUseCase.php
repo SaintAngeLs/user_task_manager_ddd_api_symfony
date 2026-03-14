@@ -10,7 +10,8 @@ final class LoginUserUseCase
 {
     public function __construct(
         private readonly UserRepositoryInterface $repository,
-    ) {}
+    ) {
+    }
 
     public function execute(string $username): User
     {
