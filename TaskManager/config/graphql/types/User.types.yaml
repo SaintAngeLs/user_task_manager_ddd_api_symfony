@@ -1,0 +1,14 @@
+UserType:
+    type: object
+    config:
+        fields:
+            id:
+                type: "String!"
+            name:
+                type: "String!"
+            username:
+                type: "String!"
+            email:
+                type: "String!"
+            isAdmin:
+                type: "Boolean!"
