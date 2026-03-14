@@ -14,7 +14,8 @@ final class ImportUsersFromJSONPlaceholderUseCase
     public function __construct(
         private readonly JSONPlaceholderClient $client,
         private readonly UserRepositoryInterface $repository,
-    ) {}
+    ) {
+    }
 
     public function execute(): array
     {

@@ -12,7 +12,9 @@ use DomainException;
 final class TaskStatusContext
 {
     /** @param iterable<TaskStatusStrategyInterface> $strategies */
-    public function __construct(private readonly iterable $strategies) {}
+    public function __construct(private readonly iterable $strategies)
+    {
+    }
 
     public function transition(Task $task, TaskStatus $targetStatus): void
     {

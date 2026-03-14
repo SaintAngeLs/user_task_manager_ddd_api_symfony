@@ -9,19 +9,21 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class EventStoreRepository
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     public function append(
-        string            $aggregateId,
-        string            $eventType,
-        array             $payload,
+        string $aggregateId,
+        string $eventType,
+        array $payload,
         DateTimeImmutable $occurredAt,
     ): void {
         $event = new StoredEvent(
             aggregateId: $aggregateId,
-            eventType:   $eventType,
-            payload:     $payload,
-            occurredAt:  $occurredAt,
+            eventType: $eventType,
+            payload: $payload,
+            occurredAt: $occurredAt,
         );
 
         $this->em->persist($event);

@@ -8,9 +8,9 @@ use InvalidArgumentException;
 
 final class TaskStatus
 {
-    public const TODO        = 'todo';
+    public const TODO = 'todo';
     public const IN_PROGRESS = 'in_progress';
-    public const DONE        = 'done';
+    public const DONE = 'done';
 
     private const VALID = [self::TODO, self::IN_PROGRESS, self::DONE];
 

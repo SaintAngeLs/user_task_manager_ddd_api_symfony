@@ -13,11 +13,11 @@ use DateTimeImmutable;
 
 class Task
 {
-    private TaskId            $id;
-    private string            $title;
-    private string            $description;
-    private TaskStatus        $status;
-    private UserId            $assignedUserId;
+    private TaskId $id;
+    private string $title;
+    private string $description;
+    private TaskStatus $status;
+    private UserId $assignedUserId;
     private DateTimeImmutable $createdAt;
     private DateTimeImmutable $updatedAt;
 
@@ -25,20 +25,20 @@ class Task
     private array $domainEvents = [];
 
     public function __construct(
-        TaskId            $id,
-        string            $title,
-        string            $description,
-        TaskStatus        $status,
-        UserId            $assignedUserId,
+        TaskId $id,
+        string $title,
+        string $description,
+        TaskStatus $status,
+        UserId $assignedUserId,
         DateTimeImmutable $createdAt,
     ) {
-        $this->id             = $id;
-        $this->title          = $title;
-        $this->description    = $description;
-        $this->status         = $status;
+        $this->id = $id;
+        $this->title = $title;
+        $this->description = $description;
+        $this->status = $status;
         $this->assignedUserId = $assignedUserId;
-        $this->createdAt      = $createdAt;
-        $this->updatedAt      = $createdAt;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $createdAt;
 
         $this->recordEvent(new TaskCreatedEvent(
             $id->getValue(),
@@ -51,8 +51,8 @@ class Task
 
     public function changeStatus(TaskStatus $newStatus): void
     {
-        $previous      = $this->status->getValue();
-        $this->status  = $newStatus;
+        $previous = $this->status->getValue();
+        $this->status = $newStatus;
         $this->updatedAt = new DateTimeImmutable();
 
         $this->recordEvent(new TaskStatusUpdatedEvent(
@@ -101,7 +101,7 @@ class Task
     /** @return object[] */
     public function pullDomainEvents(): array
     {
-        $events             = $this->domainEvents;
+        $events = $this->domainEvents;
         $this->domainEvents = [];
 
         return $events;
