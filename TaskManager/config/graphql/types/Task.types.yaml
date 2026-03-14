@@ -1,0 +1,31 @@
+TaskType:
+    type: object
+    config:
+        fields:
+            id:
+                type: "String!"
+            title:
+                type: "String!"
+            description:
+                type: "String!"
+            status:
+                type: "String!"
+            assignedUserId:
+                type: "String!"
+            createdAt:
+                type: "String!"
+                resolve: "@=value.getCreatedAt().format('c')"
+            updatedAt:
+                type: "String!"
+                resolve: "@=value.getUpdatedAt().format('c')"
+
+TaskHistoryItemType:
+    type: object
+    config:
+        fields:
+            eventType:
+                type: "String!"
+            payload:
+                type: "String!"
+            occurredAt:
+                type: "String!"

@@ -1,0 +1,111 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+
+    # -------------------------------------------------------------------------
+    # Repository bindings
+    # -------------------------------------------------------------------------
+    App\Domain\User\Repository\UserRepositoryInterface:
+        class: App\Infrastructure\Persistence\Doctrine\User\DoctrineUserRepository
+
+    App\Domain\Task\Repository\TaskRepositoryInterface:
+        class: App\Infrastructure\Persistence\Doctrine\Task\DoctrineTaskRepository
+
+    # -------------------------------------------------------------------------
+    # Strategy Pattern — tagged iterator so adding a strategy = adding one class
+    # -------------------------------------------------------------------------
+    App\Application\Task\Strategy\MoveToInProgressStrategy:
+        tags: ['app.task_status_strategy']
+
+    App\Application\Task\Strategy\MoveToDoneStrategy:
+        tags: ['app.task_status_strategy']
+
+    App\Application\Task\Strategy\TaskStatusContext:
+        arguments:
+            $strategies: !tagged_iterator app.task_status_strategy
+
+    App\Infrastructure\GraphQL\Query\User\ImportedUsersQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\User\ImportUsersMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\User\PromoteUserToAdminMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\User\LoginUserMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\User\MeQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\Security\TokenService:
+        arguments:
+            $appSecret: '%kernel.secret%'
+
+    App\Infrastructure\Security\AuthorizationService:
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\CreateTaskUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\UpdateTaskStatusUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\GetTaskHistoryUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\Task\CreateTaskMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Mutation\Task\UpdateTaskStatusMutation:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\Task\AllTasksQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\Task\MyTasksQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Infrastructure\GraphQL\Query\Task\TaskHistoryQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Domain\Shared\Event\DomainEventDispatcherInterface:
+        class: App\Infrastructure\Messenger\SymfonyMessengerDomainEventDispatcher
+
+    App\Infrastructure\Messenger\SymfonyMessengerDomainEventDispatcher:
+        autowire: true
+        autoconfigure: true

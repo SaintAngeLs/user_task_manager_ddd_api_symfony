@@ -1,0 +1,41 @@
+MutationType:
+    type: object
+    config:
+        fields:
+            importUsers:
+                type: "ImportUsersPayload!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\User\\\\ImportUsersMutation').__invoke()"
+
+            loginUser:
+                type: "LoginPayload!"
+                args:
+                    username:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\User\\\\LoginUserMutation').__invoke(args)"
+
+            promoteUserToAdmin:
+                type: "UserType!"
+                args:
+                    userId:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\User\\\\PromoteUserToAdminMutation').__invoke(args)"
+
+            createTask:
+                type: "TaskType!"
+                args:
+                    title:
+                        type: "String!"
+                    description:
+                        type: "String!"
+                    assignedUserId:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\Task\\\\CreateTaskMutation').__invoke(args)"
+
+            updateTaskStatus:
+                type: "TaskType!"
+                args:
+                    taskId:
+                        type: "String!"
+                    status:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Mutation\\\\Task\\\\UpdateTaskStatusMutation').__invoke(args)"

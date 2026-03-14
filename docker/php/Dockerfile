@@ -1,0 +1,31 @@
+FROM php:8.3-fpm-bookworm
+
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    zip \
+    libpq-dev \
+    libicu-dev \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
+    supervisor \
+    curl \
+    postgresql-client \
+    && docker-php-ext-install pdo pdo_pgsql intl zip opcache \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/app
+
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-app.ini
+COPY docker/php/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 9000
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

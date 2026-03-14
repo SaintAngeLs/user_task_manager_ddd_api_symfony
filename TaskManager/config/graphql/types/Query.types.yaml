@@ -1,0 +1,30 @@
+QueryType:
+    type: object
+    config:
+        fields:
+            users:
+                type: "[UserType]"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Resolver\\\\UserResolver').resolveAll()"
+
+            me:
+                type: "UserType"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\User\\\\MeQuery').__invoke()"
+
+            tasks:
+                type: "[TaskType!]!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\Task\\\\AllTasksQuery').__invoke()"
+
+            myTasks:
+                type: "[TaskType!]!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\Task\\\\MyTasksQuery').__invoke()"
+
+            taskHistory:
+                type: "[TaskHistoryItemType!]!"
+                args:
+                    taskId:
+                        type: "String!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\Task\\\\TaskHistoryQuery').__invoke(args)"
+
+            importedUsers:
+                type: "[UserType!]!"
+                resolve: "@=service('App\\\\Infrastructure\\\\GraphQL\\\\Query\\\\User\\\\ImportedUsersQuery').__invoke()"
