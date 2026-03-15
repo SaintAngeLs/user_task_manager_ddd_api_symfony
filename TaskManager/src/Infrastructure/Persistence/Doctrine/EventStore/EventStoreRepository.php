@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Doctrine\EventStore;
 
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class EventStoreRepository
@@ -13,11 +12,14 @@ final class EventStoreRepository
     {
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public function append(
         string $aggregateId,
         string $eventType,
         array $payload,
-        DateTimeImmutable $occurredAt,
+        \DateTimeImmutable $occurredAt,
     ): void {
         $event = new StoredEvent(
             aggregateId: $aggregateId,
@@ -30,7 +32,7 @@ final class EventStoreRepository
         $this->em->flush();
     }
 
-    /** @return StoredEvent[] */
+    /** @return list<StoredEvent> */
     public function findByAggregateId(string $aggregateId): array
     {
         return $this->em

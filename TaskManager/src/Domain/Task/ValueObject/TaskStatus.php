@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Task\ValueObject;
 
-use InvalidArgumentException;
-
 final class TaskStatus
 {
     public const TODO = 'todo';
@@ -19,9 +17,7 @@ final class TaskStatus
     private function __construct(string $value)
     {
         if (!in_array($value, self::VALID, true)) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid task status "%s". Valid values: %s', $value, implode(', ', self::VALID))
-            );
+            throw new \InvalidArgumentException(sprintf('Invalid task status "%s". Valid values: %s', $value, implode(', ', self::VALID)));
         }
         $this->value = $value;
     }
@@ -58,17 +54,17 @@ final class TaskStatus
 
     public function isTodo(): bool
     {
-        return $this->value === self::TODO;
+        return self::TODO === $this->value;
     }
 
     public function isInProgress(): bool
     {
-        return $this->value === self::IN_PROGRESS;
+        return self::IN_PROGRESS === $this->value;
     }
 
     public function isDone(): bool
     {
-        return $this->value === self::DONE;
+        return self::DONE === $this->value;
     }
 
     public function __toString(): string

@@ -6,9 +6,6 @@ namespace App\Infrastructure\Persistence\Doctrine\Task;
 
 use App\Application\Task\Factory\TaskFactory;
 use App\Domain\Task\Entity\Task as DomainTask;
-use App\Domain\Task\ValueObject\TaskStatus;
-use App\Domain\User\ValueObject\UserId;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,10 +32,10 @@ class TaskDoctrineEntity
     private string $assignedUserId;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
+    private \DateTimeImmutable $updatedAt;
 
     public function __construct(
         string $id,
@@ -46,8 +43,8 @@ class TaskDoctrineEntity
         string $description,
         string $status,
         string $assignedUserId,
-        DateTimeImmutable $createdAt,
-        DateTimeImmutable $updatedAt,
+        \DateTimeImmutable $createdAt,
+        \DateTimeImmutable $updatedAt,
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -96,27 +93,33 @@ class TaskDoctrineEntity
     {
         return $this->id;
     }
+
     public function getTitle(): string
     {
         return $this->title;
     }
+
     public function getDescription(): string
     {
         return $this->description;
     }
+
     public function getStatus(): string
     {
         return $this->status;
     }
+
     public function getAssignedUserId(): string
     {
         return $this->assignedUserId;
     }
-    public function getCreatedAt(): DateTimeImmutable
+
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
-    public function getUpdatedAt(): DateTimeImmutable
+
+    public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
     }

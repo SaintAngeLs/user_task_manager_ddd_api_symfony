@@ -7,7 +7,6 @@ namespace App\Infrastructure\Security;
 use App\Domain\User\Entity\User;
 use App\Domain\User\Repository\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class AuthorizationService
@@ -23,7 +22,7 @@ final class AuthorizationService
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request === null) {
+        if (null === $request) {
             return null;
         }
 
@@ -36,7 +35,7 @@ final class AuthorizationService
         $token = substr($authorization, 7);
         $userId = $this->tokenService->extractUserId($token);
 
-        if ($userId === null) {
+        if (null === $userId) {
             return null;
         }
 
@@ -47,8 +46,8 @@ final class AuthorizationService
     {
         $user = $this->getCurrentUser();
 
-        if ($user === null) {
-            throw new RuntimeException('Unauthorized.');
+        if (null === $user) {
+            throw new \RuntimeException('Unauthorized.');
         }
 
         return $user;
@@ -59,7 +58,7 @@ final class AuthorizationService
         $user = $this->requireCurrentUser();
 
         if (!$user->isAdmin()) {
-            throw new RuntimeException('Forbidden. Admin access required.');
+            throw new \RuntimeException('Forbidden. Admin access required.');
         }
 
         return $user;
@@ -69,7 +68,7 @@ final class AuthorizationService
     {
         $currentUser = $this->getCurrentUser();
 
-        if ($currentUser === null) {
+        if (null === $currentUser) {
             return false;
         }
 
@@ -80,7 +79,7 @@ final class AuthorizationService
     {
         $currentUser = $this->getCurrentUser();
 
-        if ($currentUser === null) {
+        if (null === $currentUser) {
             return false;
         }
 

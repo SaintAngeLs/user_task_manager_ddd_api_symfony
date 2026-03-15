@@ -6,7 +6,6 @@ namespace App\Application\User\UseCase;
 
 use App\Domain\User\Repository\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
-use RuntimeException;
 
 final class PromoteUserToAdminUseCase
 {
@@ -19,8 +18,8 @@ final class PromoteUserToAdminUseCase
     {
         $user = $this->repository->findById(UserId::fromString($userId));
 
-        if ($user === null) {
-            throw new RuntimeException(sprintf('User with id "%s" not found.', $userId));
+        if (null === $user) {
+            throw new \RuntimeException(sprintf('User with id "%s" not found.', $userId));
         }
 
         $user->promoteToAdmin();

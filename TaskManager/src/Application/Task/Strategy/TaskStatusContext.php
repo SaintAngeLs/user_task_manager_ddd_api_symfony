@@ -7,7 +7,6 @@ namespace App\Application\Task\Strategy;
 use App\Domain\Task\Entity\Task;
 use App\Domain\Task\Strategy\TaskStatusStrategyInterface;
 use App\Domain\Task\ValueObject\TaskStatus;
-use DomainException;
 
 final class TaskStatusContext
 {
@@ -21,16 +20,11 @@ final class TaskStatusContext
         foreach ($this->strategies as $strategy) {
             if ($strategy->supports($task->getStatus(), $targetStatus)) {
                 $strategy->apply($task, $targetStatus);
+
                 return;
             }
         }
 
-        throw new DomainException(
-            sprintf(
-                'No strategy found to transition from "%s" to "%s".',
-                $task->getStatus()->getValue(),
-                $targetStatus->getValue()
-            )
-        );
+        throw new \DomainException(sprintf('No strategy found to transition from "%s" to "%s".', $task->getStatus()->getValue(), $targetStatus->getValue()));
     }
 }

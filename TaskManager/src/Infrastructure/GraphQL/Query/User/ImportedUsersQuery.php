@@ -13,6 +13,9 @@ final class ImportedUsersQuery
     ) {
     }
 
+    /**
+     * @return list<\App\Domain\User\Entity\User>
+     */
     public function __invoke(): array
     {
         return $this->useCase->execute();

@@ -22,12 +22,16 @@ class StoredEvent
     #[ORM\Column(name: 'event_type', type: 'string', length: 255)]
     private string $eventType;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(name: 'payload', type: 'json')]
     private array $payload;
 
     #[ORM\Column(name: 'occurred_at', type: 'datetime_immutable')]
     private DateTimeImmutable $occurredAt;
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public function __construct(
         string $aggregateId,
         string $eventType,
@@ -44,18 +48,25 @@ class StoredEvent
     {
         return $this->id;
     }
+
     public function getAggregateId(): string
     {
         return $this->aggregateId;
     }
+
     public function getEventType(): string
     {
         return $this->eventType;
     }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function getPayload(): array
     {
         return $this->payload;
     }
+
     public function getOccurredAt(): DateTimeImmutable
     {
         return $this->occurredAt;

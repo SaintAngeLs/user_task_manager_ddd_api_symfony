@@ -7,7 +7,6 @@ namespace App\Tests\Application\Task\Factory;
 use App\Application\Task\Factory\TaskFactory;
 use App\Domain\Task\Entity\Task;
 use App\Domain\Task\ValueObject\TaskStatus;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class TaskFactoryTest extends TestCase
@@ -47,7 +46,7 @@ final class TaskFactoryTest extends TestCase
     {
         $factory = new TaskFactory();
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Task title cannot be empty.');
 
         $factory->create(
@@ -61,7 +60,7 @@ final class TaskFactoryTest extends TestCase
     {
         $factory = new TaskFactory();
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('AssignedUserId cannot be empty.');
 
         $factory->create(
