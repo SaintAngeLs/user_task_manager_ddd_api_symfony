@@ -11,18 +11,19 @@ use DomainException;
 
 final class MoveToInProgressStrategy implements TaskStatusStrategyInterface
 {
-    public function supports(TaskStatus $currentStatus): bool
+    public function supports(TaskStatus $currentStatus, TaskStatus $targetStatus): bool
     {
-        return $currentStatus->isTodo();
+        return !$currentStatus->equals($targetStatus) && $targetStatus->isInProgress();
     }
 
-    public function apply(Task $task): void
+    public function apply(Task $task, TaskStatus $targetStatus): void
     {
-        if (!$this->supports($task->getStatus())) {
+        if (!$this->supports($task->getStatus(), $targetStatus)) {
             throw new DomainException(
                 sprintf(
-                    'Cannot move task to "in_progress" from status "%s".',
-                    $task->getStatus()->getValue()
+                    'Cannot move task from "%s" to "%s".',
+                    $task->getStatus()->getValue(),
+                    $targetStatus->getValue()
                 )
             );
         }
