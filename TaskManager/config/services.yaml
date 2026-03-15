@@ -106,6 +106,21 @@ services:
         autowire: true
         autoconfigure: true
 
+    App\Application\Task\UseCase\GetMyTasksUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\GetAllTasksUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\User\UseCase\GetImportedUsersUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
     App\Domain\Shared\Event\DomainEventDispatcherInterface:
         class: App\Infrastructure\Messenger\SymfonyMessengerDomainEventDispatcher
 
