@@ -26,6 +26,9 @@ services:
     App\Application\Task\Strategy\MoveToDoneStrategy:
         tags: ['app.task_status_strategy']
 
+    App\Application\Task\Strategy\MoveToTodoStrategy:
+        tags: ['app.task_status_strategy']
+
     App\Application\Task\Strategy\TaskStatusContext:
         arguments:
             $strategies: !tagged_iterator app.task_status_strategy

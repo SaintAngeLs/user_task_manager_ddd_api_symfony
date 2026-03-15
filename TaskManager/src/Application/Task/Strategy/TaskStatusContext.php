@@ -19,14 +19,9 @@ final class TaskStatusContext
     public function transition(Task $task, TaskStatus $targetStatus): void
     {
         foreach ($this->strategies as $strategy) {
-            if ($strategy->supports($task->getStatus())) {
-                $clone = clone $task;
-                $strategy->apply($clone);
-
-                if ($clone->getStatus()->equals($targetStatus)) {
-                    $strategy->apply($task);
-                    return;
-                }
+            if ($strategy->supports($task->getStatus(), $targetStatus)) {
+                $strategy->apply($task, $targetStatus);
+                return;
             }
         }
 

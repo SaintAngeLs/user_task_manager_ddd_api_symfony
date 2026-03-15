@@ -9,11 +9,11 @@ use App\Domain\Task\Strategy\TaskStatusStrategyInterface;
 use App\Domain\Task\ValueObject\TaskStatus;
 use DomainException;
 
-final class MoveToDoneStrategy implements TaskStatusStrategyInterface
+final class MoveToTodoStrategy implements TaskStatusStrategyInterface
 {
     public function supports(TaskStatus $currentStatus, TaskStatus $targetStatus): bool
     {
-        return !$currentStatus->equals($targetStatus) && $targetStatus->isDone();
+        return !$currentStatus->equals($targetStatus) && $targetStatus->isTodo();
     }
 
     public function apply(Task $task, TaskStatus $targetStatus): void
@@ -28,6 +28,6 @@ final class MoveToDoneStrategy implements TaskStatusStrategyInterface
             );
         }
 
-        $task->changeStatus(TaskStatus::done());
+        $task->changeStatus(TaskStatus::todo());
     }
 }
