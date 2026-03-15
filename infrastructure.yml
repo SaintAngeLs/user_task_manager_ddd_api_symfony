@@ -103,6 +103,8 @@ services:
       MESSENGER_TRANSPORT_DSN: "doctrine://default?auto_setup=0"
     ports:
       - "${APP_PORT_PROD:-19001}:9000"
+    volumes:
+      - app_var_prod:/var/www/app/var
     depends_on:
       postgres:
         condition: service_healthy
@@ -130,6 +132,7 @@ volumes:
   postgres_data:
   pgadmin_data:
   app_var:
+  app_var_prod:
 
 networks:
   task_manager_net:
