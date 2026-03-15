@@ -1,6 +1,6 @@
 # Task Manager API
 
-A Symfony-based task manager API built with DDD structure, GraphQL communication, PostgreSQL, Doctrine, Messenger, and Docker.
+A Symfony-based task manager API built with Domain-Driven Design, GraphQL, PostgreSQL, Doctrine, Symfony Messenger, and Docker. The project supports task management workflows, user import from JSONPlaceholder, asynchronous task event processing, and local development through Docker Compose. It also includes unit tests, Docker smoke tests, GraphQL flow checks, and CI quality validation.
 
 ## Table of Contents
 
@@ -19,6 +19,9 @@ A Symfony-based task manager API built with DDD structure, GraphQL communication
   - [6. Update Task Status](#6-update-task-status)
   - [7. Get My Tasks](#7-get-my-tasks)
   - [8. Get Task History](#8-get-task-history)
+- [Authorization and Edge Cases](#authorization-and-edge-cases)
+  - [General Rules](#general-rules)
+  - [Endpoint Rules](#endpoint-rules)
 - [Tests](#tests)
   - [Run Unit Tests](#run-unit-tests)
   - [Run Docker E2E Smoke Tests](#run-docker-e2e-smoke-tests)
@@ -36,16 +39,19 @@ A Symfony-based task manager API built with DDD structure, GraphQL communication
 - Docker / Docker Compose
 - pgAdmin
 - PHPUnit
+- PHP CS Fixer
+- PHPStan
+- GitHub Actions CI
 
 ## Run with Docker
 
-From the project root:
+From the project root, start the development profile:
 
 ```bash
 docker compose -f infrastructure.yml --env-file .env.docker --profile dev up --build
 ````
 
-For production profile:
+For the production profile:
 
 ```bash
 docker compose -f infrastructure.yml --env-file .env.docker --profile prod up --build
@@ -393,9 +399,180 @@ query {
 }
 ```
 
+## Authorization and Edge Cases
+
+### General Rules
+
+The API uses bearer-token authentication for protected operations.
+
+Protected endpoints require this header:
+
+```http
+Authorization: Bearer <token>
+```
+
+If the token is missing, malformed, invalid, or belongs to a user that no longer exists, the request is treated as unauthorized.
+
+Access levels in the current application:
+
+* **Guest**: not authenticated
+* **Authenticated user**: logged in with a valid token
+* **Admin**: authenticated user with `isAdmin = true`
+
+Typical failure categories:
+
+* **Unauthorized**: no valid token provided
+* **Forbidden**: user is authenticated but does not have permission
+* **Not found**: requested user or task does not exist
+* **Validation or domain error**: invalid input or unsupported status transition
+
+### Endpoint Rules
+
+#### `importUsers`
+
+**Access:** public in the current implementation.
+
+**Behavior:**
+
+* Fetches users from JSONPlaceholder
+* Saves only users that do not already exist locally
+* Returns `success`, `importedCount`, and imported user list
+
+**Edge cases:**
+
+* Running the mutation multiple times is safe
+* If all users are already imported, `importedCount` may be `0`
+* If the external API fails or returns an unexpected response, the mutation fails
+
+#### `promoteUserToAdmin(userId)`
+
+**Access:** public in the current implementation.
+
+**Behavior:**
+
+* Promotes the selected user to admin
+* Persists the updated user record
+
+**Edge cases:**
+
+* If the user does not exist, the mutation fails
+* Promoting an already-admin user is effectively idempotent
+* This mutation is intentionally simple for the exercise and should not be treated as production-grade access control
+
+#### `loginUser(username)`
+
+**Access:** public.
+
+**Behavior:**
+
+* Finds a user by username
+* Returns a signed token and the matched user
+
+**Edge cases:**
+
+* If the username is not found, the mutation fails
+* The current login flow does not use passwords
+* The returned token is required for protected operations
+
+#### `me`
+
+**Access:** authenticated user required.
+
+**Behavior:**
+
+* Resolves the current user from the bearer token
+
+**Edge cases:**
+
+* Missing `Authorization` header results in unauthorized behavior
+* Invalid token signature results in unauthorized behavior
+* A valid token for a deleted or missing user behaves as unauthorized
+
+#### `createTask`
+
+**Access:** admin only.
+
+**Behavior:**
+
+* Creates a task assigned to the provided user
+* Persists the task
+* Dispatches task domain events asynchronously
+
+**Edge cases:**
+
+* Guests are unauthorized
+* Authenticated non-admin users are forbidden
+* Invalid task data may fail validation or domain rules
+* Task history may not appear immediately because events are processed asynchronously
+
+#### `updateTaskStatus(taskId, status)`
+
+**Access:** admin or assigned user.
+
+**Behavior:**
+
+* Finds the task
+* Verifies access rights
+* Applies the target status transition
+* Saves the updated task
+* Dispatches task events asynchronously
+
+**Edge cases:**
+
+* If the task does not exist, the mutation fails
+* If the current user is neither admin nor the assigned user, the mutation is forbidden
+* Invalid status values fail domain validation
+* Unsupported transitions fail with a domain error
+* History may appear with delay because Messenger processes events asynchronously
+
+#### `myTasks`
+
+**Access:** authenticated user required.
+
+**Behavior:**
+
+* Returns only tasks assigned to the current authenticated user
+
+**Edge cases:**
+
+* Guests are unauthorized
+* Admin users still receive only tasks assigned to themselves in this query
+* Use `allTasks` for a full task list
+
+#### `allTasks`
+
+**Access:** admin only.
+
+**Behavior:**
+
+* Returns all tasks in the system
+
+**Edge cases:**
+
+* Guests are unauthorized
+* Authenticated non-admin users are forbidden
+
+#### `taskHistory(taskId)`
+
+**Access:** admin or assigned user.
+
+**Behavior:**
+
+* Finds the task first
+* Verifies whether the current user can access history for that task
+* Returns persisted task lifecycle events from the event store
+
+**Edge cases:**
+
+* If the task does not exist, the query fails
+* Admin can view history for any task
+* Regular users can view history only for their own tasks
+* Guests are unauthorized
+* Immediately after task creation or status update, history can be temporarily empty due to asynchronous event handling
+
 ## Tests
 
-The project includes both unit tests and Docker-based end-to-end smoke tests.
+The project includes unit tests, Docker smoke tests, GraphQL flow checks, and CI quality validation.
 
 ### Run Unit Tests
 
@@ -405,7 +582,7 @@ From the `TaskManager` directory:
 php bin/phpunit
 ```
 
-For more detailed execution output:
+For more readable output:
 
 ```bash
 php bin/phpunit --testdox
@@ -464,17 +641,19 @@ The task history check includes retries because task lifecycle events are proces
 
 ## Notes
 
-* `importUsers` loads users from JSONPlaceholder into the local database.
-* `promoteUserToAdmin` allows a selected user to gain admin privileges.
-* `loginUser` returns an auth token.
-* `me` resolves the currently authenticated user from the bearer token.
-* `createTask` is intended for admin access.
-* `myTasks` returns tasks assigned to the currently authenticated user.
-* `taskHistory` returns persisted task lifecycle events from the event store.
+* `importUsers` loads users from JSONPlaceholder into the local database and skips already imported records
+* `loginUser` returns a bearer token required for protected operations
+* `me` resolves the currently authenticated user from the bearer token
+* `createTask` is restricted to admin users
+* `updateTaskStatus` is allowed for admins and for the user assigned to the task
+* `myTasks` returns only tasks assigned to the currently authenticated user
+* `allTasks` is restricted to admin users
+* `taskHistory` returns persisted task lifecycle events from the event store
 * Task history visibility is restricted:
 
   * admin can view history for all tasks
   * regular users can view history only for their own tasks
+* Task lifecycle events are processed asynchronously through Symfony Messenger, so history may not be visible immediately after a mutation
 
 ## Stop Containers
 
