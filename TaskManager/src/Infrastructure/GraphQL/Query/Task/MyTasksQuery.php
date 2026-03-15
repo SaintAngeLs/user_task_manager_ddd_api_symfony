@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\GraphQL\Query\Task;
 
-use App\Domain\Task\Repository\TaskRepositoryInterface;
-use App\Domain\User\ValueObject\UserId;
-use App\Infrastructure\Security\AuthorizationService;
+use App\Application\Task\UseCase\GetMyTasksUseCase;
 
 final class MyTasksQuery
 {
     public function __construct(
-        private readonly TaskRepositoryInterface $taskRepository,
-        private readonly AuthorizationService $authorizationService,
+        private readonly GetMyTasksUseCase $useCase,
     ) {
     }
 
+    /**
+     * @return list<\App\Domain\Task\Entity\Task>
+     */
     public function __invoke(): array
     {
-        $user = $this->authorizationService->requireCurrentUser();
-
-        return $this->taskRepository->findByUser(
-            UserId::fromString($user->getId()->getValue())
-        );
+        return $this->useCase->execute();
     }
 }

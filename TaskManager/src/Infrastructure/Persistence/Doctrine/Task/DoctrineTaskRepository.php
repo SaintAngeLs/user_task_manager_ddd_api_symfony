@@ -42,7 +42,7 @@ final class DoctrineTaskRepository implements TaskRepositoryInterface
     public function findAll(): array
     {
         return array_map(
-            fn(TaskDoctrineEntity $e) => $e->toDomain($this->factory),
+            fn (TaskDoctrineEntity $e) => $e->toDomain($this->factory),
             $this->em->getRepository(TaskDoctrineEntity::class)->findAll()
         );
     }
@@ -54,7 +54,7 @@ final class DoctrineTaskRepository implements TaskRepositoryInterface
             ->findBy(['assignedUserId' => $userId->getValue()]);
 
         return array_map(
-            fn(TaskDoctrineEntity $e) => $e->toDomain($this->factory),
+            fn (TaskDoctrineEntity $e) => $e->toDomain($this->factory),
             $entities
         );
     }

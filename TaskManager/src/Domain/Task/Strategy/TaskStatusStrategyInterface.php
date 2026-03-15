@@ -9,7 +9,7 @@ use App\Domain\Task\ValueObject\TaskStatus;
 
 interface TaskStatusStrategyInterface
 {
-    public function supports(TaskStatus $currentStatus): bool;
+    public function supports(TaskStatus $currentStatus, TaskStatus $targetStatus): bool;
 
-    public function apply(Task $task): void;
+    public function apply(Task $task, TaskStatus $targetStatus): void;
 }

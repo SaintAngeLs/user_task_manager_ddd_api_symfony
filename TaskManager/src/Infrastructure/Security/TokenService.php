@@ -20,14 +20,14 @@ final class TokenService
 
         $signature = hash_hmac('sha256', $payload, $this->appSecret);
 
-        return $payload . '.' . $signature;
+        return $payload.'.'.$signature;
     }
 
     public function extractUserId(string $token): ?string
     {
         $parts = explode('.', $token, 2);
 
-        if (count($parts) !== 2) {
+        if (2 !== count($parts)) {
             return null;
         }
 

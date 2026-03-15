@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\GraphQL\Query\User;
 
-use App\Domain\User\Repository\UserRepositoryInterface;
-
+use App\Application\User\UseCase\GetImportedUsersUseCase;
 
 final class ImportedUsersQuery
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository
+        private readonly GetImportedUsersUseCase $useCase,
     ) {
     }
 
+    /**
+     * @return list<\App\Domain\User\Entity\User>
+     */
     public function __invoke(): array
     {
-        return $this->userRepository->findAll();
+        return $this->useCase->execute();
     }
 }

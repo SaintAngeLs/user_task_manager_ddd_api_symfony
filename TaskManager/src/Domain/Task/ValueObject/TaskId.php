@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Task\ValueObject;
 
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final class TaskId
@@ -13,8 +12,8 @@ final class TaskId
 
     private function __construct(string $value)
     {
-        if ($value === '') {
-            throw new InvalidArgumentException('TaskId cannot be empty.');
+        if ('' === $value) {
+            throw new \InvalidArgumentException('TaskId cannot be empty.');
         }
 
         $this->value = $value;

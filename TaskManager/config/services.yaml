@@ -26,6 +26,9 @@ services:
     App\Application\Task\Strategy\MoveToDoneStrategy:
         tags: ['app.task_status_strategy']
 
+    App\Application\Task\Strategy\MoveToTodoStrategy:
+        tags: ['app.task_status_strategy']
+
     App\Application\Task\Strategy\TaskStatusContext:
         arguments:
             $strategies: !tagged_iterator app.task_status_strategy
@@ -99,6 +102,21 @@ services:
         autoconfigure: true
 
     App\Infrastructure\GraphQL\Query\Task\TaskHistoryQuery:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\GetMyTasksUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\Task\UseCase\GetAllTasksUseCase:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    App\Application\User\UseCase\GetImportedUsersUseCase:
         public: true
         autowire: true
         autoconfigure: true

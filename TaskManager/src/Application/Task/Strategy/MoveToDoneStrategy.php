@@ -7,24 +7,18 @@ namespace App\Application\Task\Strategy;
 use App\Domain\Task\Entity\Task;
 use App\Domain\Task\Strategy\TaskStatusStrategyInterface;
 use App\Domain\Task\ValueObject\TaskStatus;
-use DomainException;
 
 final class MoveToDoneStrategy implements TaskStatusStrategyInterface
 {
-    public function supports(TaskStatus $currentStatus): bool
+    public function supports(TaskStatus $currentStatus, TaskStatus $targetStatus): bool
     {
-        return $currentStatus->isInProgress();
+        return !$currentStatus->equals($targetStatus) && $targetStatus->isDone();
     }
 
-    public function apply(Task $task): void
+    public function apply(Task $task, TaskStatus $targetStatus): void
     {
-        if (!$this->supports($task->getStatus())) {
-            throw new DomainException(
-                sprintf(
-                    'Cannot move task to "done" from status "%s".',
-                    $task->getStatus()->getValue()
-                )
-            );
+        if (!$this->supports($task->getStatus(), $targetStatus)) {
+            throw new \DomainException(sprintf('Cannot move task from "%s" to "%s".', $task->getStatus()->getValue(), $targetStatus->getValue()));
         }
 
         $task->changeStatus(TaskStatus::done());

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\User\ValueObject;
 
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final class UserId
@@ -13,8 +12,8 @@ final class UserId
 
     private function __construct(string $value)
     {
-        if ($value === '') {
-            throw new InvalidArgumentException('UserId cannot be empty.');
+        if ('' === $value) {
+            throw new \InvalidArgumentException('UserId cannot be empty.');
         }
 
         $this->value = $value;

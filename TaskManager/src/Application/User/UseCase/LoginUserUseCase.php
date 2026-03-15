@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Application\User\UseCase;
 
 use App\Domain\User\Entity\User;
 use App\Domain\User\Repository\UserRepositoryInterface;
-use RuntimeException;
 
 final class LoginUserUseCase
 {
@@ -17,8 +18,8 @@ final class LoginUserUseCase
     {
         $user = $this->repository->findByUsername($username);
 
-        if ($user === null) {
-            throw new RuntimeException("User '$username' not found.");
+        if (null === $user) {
+            throw new \RuntimeException("User '$username' not found.");
         }
 
         return $user;

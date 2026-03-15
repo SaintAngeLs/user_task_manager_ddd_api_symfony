@@ -7,24 +7,18 @@ namespace App\Application\Task\Strategy;
 use App\Domain\Task\Entity\Task;
 use App\Domain\Task\Strategy\TaskStatusStrategyInterface;
 use App\Domain\Task\ValueObject\TaskStatus;
-use DomainException;
 
 final class MoveToInProgressStrategy implements TaskStatusStrategyInterface
 {
-    public function supports(TaskStatus $currentStatus): bool
+    public function supports(TaskStatus $currentStatus, TaskStatus $targetStatus): bool
     {
-        return $currentStatus->isTodo();
+        return !$currentStatus->equals($targetStatus) && $targetStatus->isInProgress();
     }
 
-    public function apply(Task $task): void
+    public function apply(Task $task, TaskStatus $targetStatus): void
     {
-        if (!$this->supports($task->getStatus())) {
-            throw new DomainException(
-                sprintf(
-                    'Cannot move task to "in_progress" from status "%s".',
-                    $task->getStatus()->getValue()
-                )
-            );
+        if (!$this->supports($task->getStatus(), $targetStatus)) {
+            throw new \DomainException(sprintf('Cannot move task from "%s" to "%s".', $task->getStatus()->getValue(), $targetStatus->getValue()));
         }
 
         $task->changeStatus(TaskStatus::inProgress());

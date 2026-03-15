@@ -56,7 +56,7 @@ final class DoctrineUserRepository implements UserRepositoryInterface
     public function findAll(): array
     {
         return array_map(
-            fn(UserDoctrineEntity $e) => $e->toDomain(),
+            fn (UserDoctrineEntity $e) => $e->toDomain(),
             $this->em->getRepository(UserDoctrineEntity::class)->findAll()
         );
     }

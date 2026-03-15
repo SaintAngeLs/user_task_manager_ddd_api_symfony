@@ -2,6 +2,30 @@
 
 A Symfony-based task manager API built with DDD structure, GraphQL communication, PostgreSQL, Doctrine, Messenger, and Docker.
 
+## Table of Contents
+
+- [Stack](#stack)
+- [Run with Docker](#run-with-docker)
+- [Available Services](#available-services)
+- [pgAdmin Login](#pgadmin-login)
+- [PostgreSQL Connection](#postgresql-connection)
+- [GraphQL Communication](#graphql-communication)
+- [Example Flow](#example-flow)
+  - [1. Import Users](#1-import-users)
+  - [2. Promote User to Admin](#2-promote-user-to-admin)
+  - [3. Log In](#3-log-in)
+  - [4. Get Current User](#4-get-current-user)
+  - [5. Create Task](#5-create-task)
+  - [6. Update Task Status](#6-update-task-status)
+  - [7. Get My Tasks](#7-get-my-tasks)
+  - [8. Get Task History](#8-get-task-history)
+- [Tests](#tests)
+  - [Run Unit Tests](#run-unit-tests)
+  - [Run Docker E2E Smoke Tests](#run-docker-e2e-smoke-tests)
+  - [Run Full GraphQL Flow Test](#run-full-graphql-flow-test)
+- [Notes](#notes)
+- [Stop Containers](#stop-containers)
+
 ## Stack
 
 - Symfony
@@ -11,6 +35,7 @@ A Symfony-based task manager API built with DDD structure, GraphQL communication
 - Symfony Messenger
 - Docker / Docker Compose
 - pgAdmin
+- PHPUnit
 
 ## Run with Docker
 
@@ -20,36 +45,52 @@ From the project root:
 docker compose -f infrastructure.yml --env-file .env.docker --profile dev up --build
 ````
 
-## Available services
+For production profile:
 
-* App: `http://127.0.0.1:18081`
-* GraphQL endpoint: `http://127.0.0.1:18081/api/graphql/`
+```bash
+docker compose -f infrastructure.yml --env-file .env.docker --profile prod up --build
+```
+
+## Available Services
+
+* App (dev): `http://127.0.0.1:18081`
+* GraphQL endpoint (dev): `http://127.0.0.1:18081/api/graphql/`
+* App (prod): `http://127.0.0.1:18082`
+* GraphQL endpoint (prod): `http://127.0.0.1:18082/api/graphql/`
 * pgAdmin: `http://127.0.0.1:18080`
 * PostgreSQL host port: `127.0.0.1:15432`
 
-## pgAdmin login
+## pgAdmin Login
 
 * Email: `info@itsharppro.com`
 * Password: `admin123`
 
-## PostgreSQL connection
+## PostgreSQL Connection
 
 From pgAdmin or any SQL client:
 
-* Host: `postgres` inside Docker network
-* Host: `127.0.0.1` from local machine
-* Port: `5432` inside Docker network
-* Port: `15432` from local machine
+* Host inside Docker network: `postgres`
+* Host from local machine: `127.0.0.1`
+* Port inside Docker network: `5432`
+* Port from local machine: `15432`
 * Database: `task_manager`
 * User: `task_manager_user`
 * Password: `task_manager_password`
 
-## GraphQL communication
+## GraphQL Communication
 
-The API is exposed through a single GraphQL endpoint:
+The API is exposed through a single GraphQL endpoint.
+
+### Development
 
 ```text
 POST http://127.0.0.1:18081/api/graphql/
+```
+
+### Production profile
+
+```text
+POST http://127.0.0.1:18082/api/graphql/
 ```
 
 Recommended headers:
@@ -60,15 +101,16 @@ Authorization: Bearer <token>
 ```
 
 Authentication is token-based.
+
 First log in with `loginUser`, then use the returned token in the `Authorization` header for protected operations.
 
 ---
 
-# Example flow
+## Example Flow
 
-## 1. Import users
+### 1. Import Users
 
-### Mutation
+#### Mutation
 
 ```graphql
 mutation {
@@ -85,7 +127,7 @@ mutation {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -106,9 +148,9 @@ mutation {
 }
 ```
 
-## 2. Promote user to admin
+### 2. Promote User to Admin
 
-### Mutation
+#### Mutation
 
 ```graphql
 mutation {
@@ -122,7 +164,7 @@ mutation {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -138,9 +180,9 @@ mutation {
 }
 ```
 
-## 3. Log in
+### 3. Log In
 
-### Mutation
+#### Mutation
 
 ```graphql
 mutation {
@@ -157,7 +199,7 @@ mutation {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -182,9 +224,9 @@ Save the token and use it in the next requests:
 Authorization: Bearer eyJ1c2VySWQiOiIxIiwiaWF0IjoxNzczNTAxMTM4fQ==.2fde2017ec1f0f9337359dd78d48e5078ed3233a8e7ae7a537caf8cae6520cb0
 ```
 
-## 4. Get current user
+### 4. Get Current User
 
-### Query
+#### Query
 
 ```graphql
 query {
@@ -198,7 +240,7 @@ query {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -214,9 +256,9 @@ query {
 }
 ```
 
-## 5. Create task
+### 5. Create Task
 
-### Mutation
+#### Mutation
 
 ```graphql
 mutation {
@@ -236,7 +278,7 @@ mutation {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -254,9 +296,9 @@ mutation {
 }
 ```
 
-## 6. Update task status
+### 6. Update Task Status
 
-### Mutation
+#### Mutation
 
 ```graphql
 mutation {
@@ -269,7 +311,7 @@ mutation {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -284,9 +326,9 @@ mutation {
 }
 ```
 
-## 7. Get my tasks
+### 7. Get My Tasks
 
-### Query
+#### Query
 
 ```graphql
 query {
@@ -299,7 +341,7 @@ query {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -316,9 +358,9 @@ query {
 }
 ```
 
-## 8. Get task history
+### 8. Get Task History
 
-### Query
+#### Query
 
 ```graphql
 query {
@@ -330,7 +372,7 @@ query {
 }
 ```
 
-### Example response
+#### Example response
 
 ```json
 {
@@ -351,6 +393,75 @@ query {
 }
 ```
 
+## Tests
+
+The project includes both unit tests and Docker-based end-to-end smoke tests.
+
+### Run Unit Tests
+
+From the `TaskManager` directory:
+
+```bash
+php bin/phpunit
+```
+
+For more detailed execution output:
+
+```bash
+php bin/phpunit --testdox
+```
+
+### Run Docker E2E Smoke Tests
+
+From the repository root, start the development environment:
+
+```bash
+docker compose -f infrastructure.yml --env-file .env.docker --profile dev up -d --build
+```
+
+Run the dev smoke test:
+
+```bash
+bash tests-e2e/dev-smoke.sh
+```
+
+This checks:
+
+* GraphQL endpoint availability
+* pgAdmin availability
+
+Run the prod smoke test:
+
+```bash
+docker compose -f infrastructure.yml --env-file .env.docker --profile prod up -d --build
+bash tests-e2e/prod-smoke.sh
+```
+
+This checks:
+
+* GraphQL endpoint availability in the production profile
+
+### Run Full GraphQL Flow Test
+
+From the repository root:
+
+```bash
+bash tests-e2e/graphql-flow.sh
+```
+
+This script verifies the main application flow:
+
+* import users
+* promote a user to admin
+* log in and obtain a bearer token
+* query the authenticated user with `me`
+* create a task
+* update task status
+* fetch current user tasks
+* fetch task history
+
+The task history check includes retries because task lifecycle events are processed asynchronously through Symfony Messenger.
+
 ## Notes
 
 * `importUsers` loads users from JSONPlaceholder into the local database.
@@ -360,8 +471,12 @@ query {
 * `createTask` is intended for admin access.
 * `myTasks` returns tasks assigned to the currently authenticated user.
 * `taskHistory` returns persisted task lifecycle events from the event store.
+* Task history visibility is restricted:
 
-## Stop containers
+  * admin can view history for all tasks
+  * regular users can view history only for their own tasks
+
+## Stop Containers
 
 ```bash
 docker compose -f infrastructure.yml --env-file .env.docker down
