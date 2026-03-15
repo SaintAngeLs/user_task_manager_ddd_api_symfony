@@ -9,7 +9,6 @@ use App\Domain\Task\Event\TaskStatusUpdatedEvent;
 use App\Domain\Task\ValueObject\TaskId;
 use App\Domain\Task\ValueObject\TaskStatus;
 use App\Domain\User\ValueObject\UserId;
-use DateTimeImmutable;
 
 class Task
 {
@@ -18,8 +17,8 @@ class Task
     private string $description;
     private TaskStatus $status;
     private UserId $assignedUserId;
-    private DateTimeImmutable $createdAt;
-    private DateTimeImmutable $updatedAt;
+    private \DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $updatedAt;
 
     /** @var object[] */
     private array $domainEvents = [];
@@ -30,7 +29,7 @@ class Task
         string $description,
         TaskStatus $status,
         UserId $assignedUserId,
-        DateTimeImmutable $createdAt,
+        \DateTimeImmutable $createdAt,
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -53,7 +52,7 @@ class Task
     {
         $previous = $this->status->getValue();
         $this->status = $newStatus;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
 
         $this->recordEvent(new TaskStatusUpdatedEvent(
             $this->id->getValue(),
@@ -88,12 +87,12 @@ class Task
         return $this->assignedUserId;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
+    public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
     }

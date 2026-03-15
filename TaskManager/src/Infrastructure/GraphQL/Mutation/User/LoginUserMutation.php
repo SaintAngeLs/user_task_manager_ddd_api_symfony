@@ -16,6 +16,12 @@ final class LoginUserMutation
     ) {
     }
 
+    /**
+     * @return array{
+     *     token: string,
+     *     user: \App\Domain\User\Entity\User
+     * }
+     */
     public function __invoke(Argument $args): array
     {
         $user = $this->useCase->execute($args['username']);

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Task\ValueObject;
 
 use App\Domain\Task\ValueObject\TaskStatus;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class TaskStatusTest extends TestCase
@@ -19,7 +18,7 @@ final class TaskStatusTest extends TestCase
 
     public function testThrowsExceptionForInvalidStatus(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         TaskStatus::fromString('blocked');
     }

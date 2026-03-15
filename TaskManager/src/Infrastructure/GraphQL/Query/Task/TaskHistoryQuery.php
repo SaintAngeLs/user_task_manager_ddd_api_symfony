@@ -14,6 +14,9 @@ final class TaskHistoryQuery
     ) {
     }
 
+    /**
+     * @return list<\App\Application\Task\DTO\TaskHistoryItem>
+     */
     public function __invoke(Argument $args): array
     {
         return $this->useCase->execute($args['taskId']);

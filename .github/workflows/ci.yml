@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/**
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  quality:
+    name: PHP CS Fixer, PHPStan and PHPUnit
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: TaskManager
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - name: Prepare Symfony env file
+        run: |
+          if [ ! -f .env ] && [ -f .env.docker ]; then
+            cp .env.docker .env
+          fi
+
+      - name: Validate composer.json
+        run: composer validate --no-check-publish
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
+
+      - name: Run PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse src tests --memory-limit=1G
+
+      - name: Run PHPUnit
+        run: php bin/phpunit --debug

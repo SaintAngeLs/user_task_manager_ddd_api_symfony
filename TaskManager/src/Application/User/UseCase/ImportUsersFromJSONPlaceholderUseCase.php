@@ -17,6 +17,13 @@ final class ImportUsersFromJSONPlaceholderUseCase
     ) {
     }
 
+    /**
+     * @return array{
+     *     success: bool,
+     *     importedCount: int,
+     *     users: list<User>
+     * }
+     */
     public function execute(): array
     {
         $rawUsers = $this->client->fetchUsers();
@@ -24,7 +31,7 @@ final class ImportUsersFromJSONPlaceholderUseCase
 
         foreach ($rawUsers as $data) {
             $existing = $this->repository->findById(UserId::fromInt($data['id']));
-            if ($existing !== null) {
+            if (null !== $existing) {
                 continue;
             }
 

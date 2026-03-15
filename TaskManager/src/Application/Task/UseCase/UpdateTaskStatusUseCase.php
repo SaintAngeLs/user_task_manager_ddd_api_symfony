@@ -11,7 +11,6 @@ use App\Domain\Task\Repository\TaskRepositoryInterface;
 use App\Domain\Task\ValueObject\TaskId;
 use App\Domain\Task\ValueObject\TaskStatus;
 use App\Infrastructure\Security\AuthorizationService;
-use RuntimeException;
 
 final class UpdateTaskStatusUseCase
 {
@@ -27,12 +26,12 @@ final class UpdateTaskStatusUseCase
     {
         $task = $this->taskRepository->findById(TaskId::fromString($taskId));
 
-        if ($task === null) {
-            throw new RuntimeException(sprintf('Task "%s" not found.', $taskId));
+        if (null === $task) {
+            throw new \RuntimeException(sprintf('Task "%s" not found.', $taskId));
         }
 
         if (!$this->authorizationService->canManageTaskAssignedTo($task->getAssignedUserId()->getValue())) {
-            throw new RuntimeException('Forbidden.');
+            throw new \RuntimeException('Forbidden.');
         }
 
         $this->taskStatusContext->transition($task, TaskStatus::fromString($targetStatus));

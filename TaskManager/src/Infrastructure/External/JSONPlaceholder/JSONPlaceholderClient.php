@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\External\JSONPlaceholder;
 
-use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class JSONPlaceholderClient
@@ -22,12 +21,10 @@ final class JSONPlaceholderClient
      */
     public function fetchUsers(): array
     {
-        $response = $this->httpClient->request('GET', self::BASE_URL . '/users');
+        $response = $this->httpClient->request('GET', self::BASE_URL.'/users');
 
-        if ($response->getStatusCode() !== 200) {
-            throw new RuntimeException(
-                sprintf('JSONPlaceholder returned unexpected status %d.', $response->getStatusCode())
-            );
+        if (200 !== $response->getStatusCode()) {
+            throw new \RuntimeException(sprintf('JSONPlaceholder returned unexpected status %d.', $response->getStatusCode()));
         }
 
         return $response->toArray();

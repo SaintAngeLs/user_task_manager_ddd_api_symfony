@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Task\UseCase;
 
-use App\Domain\Task\Repository\TaskRepositoryInterface;
 use App\Domain\Task\Entity\Task;
+use App\Domain\Task\Repository\TaskRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
 use App\Infrastructure\Security\AuthorizationService;
 

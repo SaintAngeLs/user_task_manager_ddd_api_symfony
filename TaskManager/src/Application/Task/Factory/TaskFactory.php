@@ -8,8 +8,6 @@ use App\Domain\Task\Entity\Task;
 use App\Domain\Task\ValueObject\TaskId;
 use App\Domain\Task\ValueObject\TaskStatus;
 use App\Domain\User\ValueObject\UserId;
-use DateTimeImmutable;
-use InvalidArgumentException;
 
 final class TaskFactory
 {
@@ -19,12 +17,12 @@ final class TaskFactory
         string $assignedUserId,
         string $status = TaskStatus::TODO,
     ): Task {
-        if (trim($title) === '') {
-            throw new InvalidArgumentException('Task title cannot be empty.');
+        if ('' === trim($title)) {
+            throw new \InvalidArgumentException('Task title cannot be empty.');
         }
 
-        if (trim($assignedUserId) === '') {
-            throw new InvalidArgumentException('AssignedUserId cannot be empty.');
+        if ('' === trim($assignedUserId)) {
+            throw new \InvalidArgumentException('AssignedUserId cannot be empty.');
         }
 
         return new Task(
@@ -33,7 +31,7 @@ final class TaskFactory
             description: trim($description),
             status: TaskStatus::fromString($status),
             assignedUserId: UserId::fromString($assignedUserId),
-            createdAt: new DateTimeImmutable(),
+            createdAt: new \DateTimeImmutable(),
         );
     }
 
@@ -43,7 +41,7 @@ final class TaskFactory
         string $description,
         string $status,
         string $assignedUserId,
-        DateTimeImmutable $createdAt,
+        \DateTimeImmutable $createdAt,
     ): Task {
         return new Task(
             id: TaskId::fromString($id),

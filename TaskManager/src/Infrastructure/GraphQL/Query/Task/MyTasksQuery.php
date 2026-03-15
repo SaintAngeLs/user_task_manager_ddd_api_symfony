@@ -13,6 +13,9 @@ final class MyTasksQuery
     ) {
     }
 
+    /**
+     * @return list<\App\Domain\Task\Entity\Task>
+     */
     public function __invoke(): array
     {
         return $this->useCase->execute();

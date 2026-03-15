@@ -76,18 +76,22 @@ class UserDoctrineEntity
     {
         return $this->id;
     }
+
     public function getName(): string
     {
         return $this->name;
     }
+
     public function getUsername(): string
     {
         return $this->username;
     }
+
     public function getEmail(): string
     {
         return $this->email;
     }
+
     public function isAdmin(): bool
     {
         return $this->isAdmin;
