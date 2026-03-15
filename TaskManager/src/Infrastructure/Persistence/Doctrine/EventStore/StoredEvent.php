@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Doctrine\EventStore;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -27,7 +26,7 @@ class StoredEvent
     private array $payload;
 
     #[ORM\Column(name: 'occurred_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $occurredAt;
+    private \DateTimeImmutable $occurredAt;
 
     /**
      * @param array<string, mixed> $payload
@@ -36,7 +35,7 @@ class StoredEvent
         string $aggregateId,
         string $eventType,
         array $payload,
-        DateTimeImmutable $occurredAt,
+        \DateTimeImmutable $occurredAt,
     ) {
         $this->aggregateId = $aggregateId;
         $this->eventType = $eventType;
@@ -67,7 +66,7 @@ class StoredEvent
         return $this->payload;
     }
 
-    public function getOccurredAt(): DateTimeImmutable
+    public function getOccurredAt(): \DateTimeImmutable
     {
         return $this->occurredAt;
     }
